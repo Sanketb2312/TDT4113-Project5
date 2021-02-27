@@ -1,0 +1,6 @@
+name: progpro_project5
+dependencies:
+- python=3
+- pip
+- pip:
+  - pynput
