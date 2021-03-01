@@ -1,0 +1,7 @@
+name: progpro_project5
+dependencies:
+- python=3
+- pip=21.0.1
+- pylint=2.7.1
+- pip:
+  - pynput==1.7.3
