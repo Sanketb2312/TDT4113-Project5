@@ -1,5 +1,6 @@
 from time import *
 from GPIOSimulator_v5 import *
+from keypad import Keypad
 
 GPIO = GPIOSimulator()
 
@@ -8,6 +9,9 @@ LED_MAP = [(0, 1), (1, 0), (1, 2), (2, 1), (0, 2), (2, 0)]
 
 
 class Charlieplexer:
+
+    def __init__(self, keypad):
+        self.keypad = keypad
 
     def get_pins(self, k):
         """Returns pins: (High, Low, Inactive)"""
@@ -32,11 +36,15 @@ class Charlieplexer:
         GPIO.output(pins[1], GPIO.LOW)
         GPIO.setup(pins[2], GPIO.IN)
 
+        GPIO.show_leds_states()
+
     def turn_off(self, k):
         """Turn off the specified LED"""
         pins = self.get_pins(k)
         GPIO.setup(pins[0], GPIO.IN)
         GPIO.setup(pins[1], GPIO.IN)
+
+        GPIO.show_leds_states()
 
     def power_up(self):
         """Light up one LED at a time"""
@@ -55,7 +63,6 @@ class Charlieplexer:
         """Turn on and off LEDs in sequence"""
         for k in leds:
             self.turn_on(k)
-            GPIO.show_leds_states()
             sleep(t_sleep)
             self.turn_off(k)
 
@@ -65,4 +72,40 @@ class Charlieplexer:
         for k in range(0, 6):
             self.flash(leds, 0.2)
             leds.pop(len(leds) - 1)
+
+    def user_turn_on(self):
+        """Turn one user-specified LED on for a user specified number of seconds"""
+
+        print("Specify LED:")
+        led = self.keypad.get_key_pressed()
+        if not isinstance(led, int):
+            print("Expecting an integer.")
+            return
+        elif led < 0 or led > 5:
+            print("Choose a LED between 0 and 5")
+            return
+
+        print("Specify duration, finish with '*':")
+        duration = ""
+        while True:
+            inp = self.keypad.get_key_pressed()
+            if inp == "*":
+                if len(duration) == 0:
+                    duration = 0
+                else:
+                    duration = int(duration)
+
+                self.turn_on(led)
+                sleep(duration)
+                self.turn_off(led)
+                return
+
+            elif isinstance(inp, int):
+                duration += str(inp)
+            else:
+                print("Not a valid input.")
+                return
+
+
+
 
