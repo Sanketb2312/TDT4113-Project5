@@ -9,7 +9,7 @@ class KPCAgent:
         self.keypad: Keypad = Keypad()
         self.led_board: LEDBoard = LEDBoard()
         self.password_path: str = "password.txt"
-        self.override_signal: int or chr = False
+        self.override_signal: int or None = None
         self.password_buffer: str = ""
 
     def reset_passcode_entry(self) -> None:
