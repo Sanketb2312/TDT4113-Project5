@@ -8,7 +8,7 @@ LED_MAP = [(0, 1), (1, 0), (1, 2), (2, 1), (0, 2), (2, 0)]
 C_PINS = [PIN_CHARLIEPLEXING_0, PIN_CHARLIEPLEXING_1, PIN_CHARLIEPLEXING_2]
 
 
-class Charlieplexer:
+class LEDBoard:
 
     def get_pins(self, k):
         """Returns pins: (High, Low, Inactive)"""
@@ -58,9 +58,16 @@ class Charlieplexer:
             self.turn_off(k)
 
     def power_down(self):
-        "Light up all, then turn off one at a time"
+        """Light up all, then turn off one at a time"""
         leds = [k for k in range(0, 6)]
         for k in range(0, 6):
             self.flash(leds, 0.2)
             leds.pop(len(leds) - 1)
 
+    def success(self):
+        """Should light up if login succeeded"""
+        pass
+
+    def failure(self):
+        """Should light up if failed"""
+        pass
