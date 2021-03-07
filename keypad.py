@@ -17,8 +17,8 @@ MAX_PRESS_DURATION = 1
 class Keypad:
 
     def __init__(self):
-        self.prev_pressed = None
-        self.t_prev_pressed = 0
+        self.__prev_pressed = None
+        self.__t_prev_pressed = 0
 
     def poll(self):
         """Returns current key pressed, None is nothing is pressed"""
@@ -40,14 +40,14 @@ class Keypad:
             MAX_PRESS_DURATION, it is seen as an extra key press."""
         pressed = None
         released = False
-        while pressed is None or (self.prev_pressed is not None and (self.prev_pressed == pressed and
-                                  (not released and time() - self.t_prev_pressed < MAX_PRESS_DURATION))):
+        while pressed is None or (self.__prev_pressed is not None and (self.__prev_pressed == pressed and
+                                  (not released and time() - self.__t_prev_pressed < MAX_PRESS_DURATION))):
             pressed = self.poll()
             if pressed is None:
                 released = True
             sleep(0.008)
 
-        self.prev_pressed = pressed
-        self.t_prev_pressed = time()
+        self.__prev_pressed = pressed
+        self.__t_prev_pressed = time()
         return pressed
 

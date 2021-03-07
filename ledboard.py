@@ -11,7 +11,7 @@ LED_MAP = [(0, 1), (1, 0), (1, 2), (2, 1), (0, 2), (2, 0)]
 class LEDBoard:
 
     def __init__(self, keypad):
-        self.keypad = keypad
+        self.__keypad = keypad
 
     def get_pins(self, k):
         """Returns pins: (High, Low, Inactive)"""
@@ -77,7 +77,7 @@ class LEDBoard:
         """Turn one user-specified LED on for a user specified number of seconds"""
 
         print("Specify LED:")
-        led = self.keypad.get_key_pressed()
+        led = self.__keypad.get_key_pressed()
         if not isinstance(led, int):
             print("Expecting an integer.")
             return
@@ -88,7 +88,7 @@ class LEDBoard:
         print("Specify duration, finish with '*':")
         duration = ""
         while True:
-            inp = self.keypad.get_key_pressed()
+            inp = self.__keypad.get_key_pressed()
             if inp == "*":
                 if len(duration) == 0:
                     duration = 0
