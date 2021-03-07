@@ -8,7 +8,7 @@ GPIO = GPIOSimulator()
 LED_MAP = [(0, 1), (1, 0), (1, 2), (2, 1), (0, 2), (2, 0)]
 
 
-class Charlieplexer:
+class LEDBoard:
 
     def __init__(self, keypad):
         self.keypad = keypad
@@ -105,7 +105,4 @@ class Charlieplexer:
             else:
                 print("Not a valid input.")
                 return
-
-
-
 
