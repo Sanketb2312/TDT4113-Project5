@@ -21,11 +21,6 @@ class Rule:
             return True
         return False
 
-    def signal_is_digit(self, signal):
-        return 0 <=ord(signal) <=9
-
-
-
     def match(self, state: str or Callable, signal: int or Callable):
         if signal_is_digit(signal):
             if state == self.source_state and signal == self.expected_signal:
@@ -33,8 +28,10 @@ class Rule:
             else:
                 state = self.source_state
 
-
-
-def signal_is_digit(signal):
-    return 0 <=ord(signal) <=9
+    @staticmethod
+    def signal_is_digit(signal):
+        try:
+            return 0 <=ord(0) <=9
+        except:
+            return False
 

@@ -15,10 +15,10 @@ class FSM:
         pass
 
     def get_start_state(self):
-      return Rule().source_state
+      return Rule.source_state
 
     def get_end_state(self):
-        return Rule().source_state
+        return Rule.source_state
 
     def get_end_state(self):
-        return Rule().next_state
+        return Rule.next_state

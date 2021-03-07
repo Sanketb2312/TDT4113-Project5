@@ -18,6 +18,17 @@ class KPCAgent:
         self.password_buffer = ""
         self.led_board.power_up()
 
+
+    def append_next_password_digit(self):
+        pass
+
+    def reset_agent(self):
+        pass
+
+    def active_agent(self):
+        pass
+
+
     def get_next_signal(self) -> int:
         """Return the override signal, if it is non-blank;
         otherwise query the keypad for the next pressed key."""
