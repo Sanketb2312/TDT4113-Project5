@@ -6,22 +6,22 @@ from keypad import Keypad
 class Rule:
     """Represents a rule in a FSM"""
 
-    source_state: str or Callable
-    next_state: str
-    expected_signal: chr or Callable
-    action: Callable
+    def __init__(self, source_state, next_state, expected_signal, action):
+        self.source_state: str or Callable[[chr], bool] = source_state
+        self.next_state: str = next_state
+        self.expected_signal: chr or Callable = expected_signal
+        self.action: Callable[[], bool] = action
 
+    def match(self, state: str, signal: int) -> bool:
+        if(isinstance(self.source_state, Callable)):
+            return self.source_state(state)
+        if(isinstance(self.expected_signal, Callable)):
+            return self.expected_signal(signal)
+        if state == self.source_state and signal == self.expected_signal:
+            return True
+        return False
 
-    def match(self, state: str or Callable, signal: int or Callable):
-        if signal_is_digit(signal):
-            if state == self.source_state and signal == self.expected_signal:
-                return self.action
-            else:
-                state = self.source_state
-
-
-
-def signal_is_digit(signal):
-    return 0 <=ord(signal) <=9
+    def signal_is_digit(self, signal):
+        return 0 <=ord(signal) <=9
 
 
