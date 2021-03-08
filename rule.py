@@ -13,25 +13,24 @@ class Rule:
         self.action: Callable[[], bool] = action
 
     def match(self, state: str, signal: int) -> bool:
-        if(isinstance(self.source_state, Callable)):
-            return self.source_state(state)
-        if(isinstance(self.expected_signal, Callable)):
-            return self.expected_signal(signal)
-        if state == self.source_state and signal == self.expected_signal:
-            return True
-        return False
+        def match_state() -> bool:
+            if callable(self.source_state):
+                return self.source_state(state)
+            elif isinstance(self.source_state, str):
+                return state == self.source_state
+            return False
 
-    def match(self, state: str or Callable, signal: int or Callable):
-        if signal_is_digit(signal):
-            if state == self.source_state and signal == self.expected_signal:
-                return self.action
-            else:
-                state = self.source_state
+        def match_signal() -> bool:
+            print(type(self.expected_signal))
+            if callable(self.expected_signal):
+                return self.expected_signal(signal)
+            elif isinstance(self.expected_signal, int) or isinstance(self.expected_signal, str):
+                return signal == self.expected_signal
+            return False
+
+        return match_state() and match_signal()
 
     @staticmethod
     def signal_is_digit(signal):
-        try:
-            return 0 <=ord(0) <=9
-        except:
-            return False
-
+        l: list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        return signal in l

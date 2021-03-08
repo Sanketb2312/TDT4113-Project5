@@ -1,4 +1,5 @@
 import time
+from typing import Callable
 
 from keypad import Keypad
 from ledboard import LEDBoard
@@ -7,12 +8,12 @@ from ledboard import LEDBoard
 class KPCAgent:
     def __init__(self):
         self.keypad: Keypad = Keypad()
-        self.led_board: LEDBoard = LEDBoard()
+        self.led_board: LEDBoard = LEDBoard(keypad=self.keypad)
         self.password_path: str = "password.txt"
         self.override_signal: int or None = None
         self.password_buffer: str = ""
 
-    def reset_passcode_entry(self) -> None:
+    def reset_passcode_entry(self, signal) -> None:
         """Clear the passcode-buffer and initiate a “power up”
         lighting sequence on the LED Board."""
         self.password_buffer = ""
@@ -20,14 +21,14 @@ class KPCAgent:
 
 
     def append_next_password_digit(self, signal):
-        self.password_buffer += signal
+        self.password_buffer += str(signal)
 
-    def reset_agent(self):
+    def reset_agent(self, signal):
         self.override_signal = None
         self.password_buffer = ""
 
 
-    def active_agent(self):
+    def active_agent(self, signal):
         return self.override_signal == "Y"
 
 
@@ -38,7 +39,7 @@ class KPCAgent:
             return self.override_signal
         return self.keypad.get_key_pressed()
 
-    def verify_login(self) -> None:
+    def verify_login(self, signal) -> None:
         """Check that the password just entered via the keypad
         matches that in the password file.
         Also, this should call the LED Board to initiate
@@ -48,9 +49,11 @@ class KPCAgent:
         correct_password: str = file.read()
         if self.password_buffer == correct_password:
             self.override_signal = 'Y'
+            self.led_success()
         else:
             self.override_signal = 'N'
-        self.led_board.success()
+            self.led_failure()
+
 
     def validate_passcode_change(self, password: str) -> None:
         """Check that the new password is legal and changes it."""
@@ -66,9 +69,9 @@ class KPCAgent:
         if valid_passcode():
             file = open(self.password_path, "w")
             file.write(self.password_buffer)
-            self.led_board.success()
+            self.led_success()
         else:
-            self.led_board.failure()
+            self.led_failure()
 
     def light_one_led(self, led_id: int, duration_sec: int):
         """Lights the led specified with id and duration_sec."""
@@ -88,3 +91,14 @@ class KPCAgent:
         """Call the LED Board to initiate the “power down”
         lighting sequence."""
         self.led_board.power_down()
+
+    @staticmethod
+    def do_action(action: Callable[[], bool], signal):
+        """Executes the action"""
+        return action(signal=signal)
+
+    def led_success(self) -> None:
+        self.led_board.twinkle()
+
+    def led_failure(self) -> None:
+        self.led_board.flash()
