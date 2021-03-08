@@ -3,7 +3,7 @@ from typing import Callable
 from keypad import Keypad
 
 
-def do_nothing(signal):
+def do_nothing():
     return True
 
 

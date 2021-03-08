@@ -44,9 +44,10 @@ def main():
         signal = agent.get_next_signal()
         for rule in fsm.rules:
             if rule.match(state, signal):
-                print(rule.source_state, rule.next_state, agent.override_signal)
+                agent.current_signal = signal
+                #print(rule.source_state, rule.next_state, agent.override_signal)
                 state = rule.next_state
-                agent.do_action(rule.action, signal)
+                agent.do_action(rule.action)
                 break
 
     # agent keypad, led shutdown

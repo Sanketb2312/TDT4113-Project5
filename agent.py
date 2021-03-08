@@ -18,25 +18,22 @@ class KPCAgent:
         self.override_signal: int or str or None = None
         self.password_buffer: str = ""
         self.password_buffer_old: str = ""
+        self.current_signal = None
 
-    def reset_passcode_entry(self, signal) -> None:
+    def reset_passcode_entry(self) -> None:
         """Clear the passcode-buffer and initiate a “power up”
         lighting sequence on the LED Board."""
         self.password_buffer = ""
         self.led_board.power_up()
 
-    def append_next_password_digit(self, signal):
+    def append_next_password_digit(self):
         """Appends the next digit to the password."""
-        self.password_buffer += str(signal)
+        self.password_buffer += str(self.current_signal)
 
-    def reset_agent(self, signal):
+    def reset_agent(self):
         """Resets the agent"""
         self.override_signal = None
         self.password_buffer = ""
-
-    def active_agent(self, signal):
-        """Returns if the agent is active"""
-        return self.override_signal == "Y"
 
     def get_next_signal(self) -> int:
         """Return the override signal, if it is non-blank;
@@ -47,7 +44,7 @@ class KPCAgent:
             return override_signal
         return self.keypad.get_key_pressed()
 
-    def verify_login(self, signal) -> None:
+    def verify_login(self) -> None:
         """Check that the password just entered via the keypad
         matches that in the password file.
         Also, this should call the LED Board to initiate
@@ -101,9 +98,9 @@ class KPCAgent:
         self.led_board.power_down()
 
     @staticmethod
-    def do_action(action: Callable[[], bool], signal):
+    def do_action(action: Callable[[], bool]):
         """Executes the action"""
-        return action(signal=signal)
+        return action()
 
     def led_success(self) -> None:
         """The LED-lighting pattern when succeeded"""
@@ -113,17 +110,17 @@ class KPCAgent:
         """The LED-lighting pattern when failed"""
         self.led_board.flash()
 
-    def refresh_agent(self, signal):
+    def refresh_agent(self):
         """Resets the agent."""
         self.password_buffer_old = ""
         self.led_board.power_up()
 
-    def cache_first_password(self, signal):
+    def cache_first_password(self):
         """Caches the first password typed."""
         self.password_buffer_old = self.password_buffer
         self.password_buffer = ""
 
-    def compare_new_password(self, signal):
+    def compare_new_password(self):
         """Compares to passwords and saves it if they matched"""
         if self.password_buffer == self.password_buffer_old:
             file = open(self.password_path, "w")
