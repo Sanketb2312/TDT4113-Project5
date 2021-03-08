@@ -19,14 +19,16 @@ class KPCAgent:
         self.led_board.power_up()
 
 
-    def append_next_password_digit(self):
-        pass
+    def append_next_password_digit(self, signal):
+        self.password_buffer += signal
 
     def reset_agent(self):
-        pass
+        self.override_signal = None
+        self.password_buffer = ""
+
 
     def active_agent(self):
-        pass
+        return self.override_signal == "Y"
 
 
     def get_next_signal(self) -> int:
