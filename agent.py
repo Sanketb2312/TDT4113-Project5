@@ -102,3 +102,15 @@ class KPCAgent:
 
     def led_failure(self) -> None:
         self.led_board.flash()
+
+    def reset_passcode_accumulator(self):
+        pass
+
+    def refresh_agent(self):
+        pass
+
+    def cache_first_password(self):
+        pass
+
+    def compare_new_password(self):
+        pass
