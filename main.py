@@ -21,6 +21,7 @@ def main():
     # ledboard = LEDBoard() # i Agent
 
     fsm = FSM(agent)
+    fsm.add_rule(Rule(return_true, "S-end", '#'))
     fsm.add_rule(Rule("S-init", "S-Read", return_true, agent.reset_passcode_entry))
     fsm.add_rule(Rule("S-Read", "S-Read", Rule.signal_is_digit,
                       agent.append_next_password_digit))

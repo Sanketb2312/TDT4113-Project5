@@ -51,6 +51,7 @@ class LEDBoard:
         leds = []
         for k in range(0, 6):
             leds.append(k)
+            print("----")
             self.flash(leds, 0.2)
 
     def flash(self, leds=[k for k in range(6)], t_flash: float =1):
@@ -63,8 +64,7 @@ class LEDBoard:
         """Turn on and off LEDs in sequence"""
         for k in leds:
             self.turn_on(k)
-        sleep(t_sleep)
-        for k in leds:
+            sleep(t_sleep)
             self.turn_off(k)
 
     def power_down(self):
