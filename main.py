@@ -1,3 +1,4 @@
+import time
 from inspect import isfunction
 from rule import Rule
 from fsm import FSM
@@ -25,7 +26,7 @@ def main():
                       agent.append_next_password_digit))
     fsm.add_rule(Rule("S-Read", "S-Verify", '*', agent.verify_login))
     fsm.add_rule(Rule("S-Read", "S-Init", return_true, agent.reset_agent))
-    fsm.add_rule(Rule("S-Verify", "S-Active", 'Y', agent.active_agent))
+    fsm.add_rule(Rule("S-Verify", "S-Active", 'Y'))
     fsm.add_rule(Rule("S-Verify", "S-init", return_true, agent.reset_agent))
 
     fsm.add_rule(Rule("S-Read-2", "S-Active", '@', agent.refresh_agent))
@@ -42,8 +43,8 @@ def main():
         signal = agent.get_next_signal()
         for rule in fsm.rules:
             if rule.match(state, signal):
+                print(rule.source_state, rule.next_state, agent.override_signal)
                 state = rule.next_state
-                print(rule.action)
                 agent.do_action(rule.action, signal)
                 break
 

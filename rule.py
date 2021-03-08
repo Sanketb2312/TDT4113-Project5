@@ -3,10 +3,14 @@ from typing import Callable
 from keypad import Keypad
 
 
+def do_nothing(signal):
+    return True
+
+
 class Rule:
     """Represents a rule in a FSM"""
 
-    def __init__(self, source_state, next_state, expected_signal, action):
+    def __init__(self, source_state, next_state, expected_signal, action=do_nothing):
         self.source_state: str or Callable[[chr], bool] = source_state
         self.next_state: str = next_state
         self.expected_signal: chr or Callable = expected_signal
@@ -21,7 +25,6 @@ class Rule:
             return False
 
         def match_signal() -> bool:
-            print(type(self.expected_signal))
             if callable(self.expected_signal):
                 return self.expected_signal(signal)
             elif isinstance(self.expected_signal, int) or isinstance(self.expected_signal, str):

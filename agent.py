@@ -10,7 +10,7 @@ class KPCAgent:
         self.keypad: Keypad = Keypad()
         self.led_board: LEDBoard = LEDBoard(keypad=self.keypad)
         self.password_path: str = "password.txt"
-        self.override_signal: int or None = None
+        self.override_signal: int or str or None = None
         self.password_buffer: str = ""
         self.password_buffer_old: str = ""
 
@@ -37,7 +37,9 @@ class KPCAgent:
         """Return the override signal, if it is non-blank;
         otherwise query the keypad for the next pressed key."""
         if self.override_signal is not None:
-            return self.override_signal
+            override_signal = self.override_signal
+            self.override_signal = None
+            return override_signal
         return self.keypad.get_key_pressed()
 
     def verify_login(self, signal) -> None:
@@ -110,11 +112,15 @@ class KPCAgent:
 
     def cache_first_password(self, signal):
         self.password_buffer_old = self.password_buffer
+        self.password_buffer = ""
 
-    def compare_new_password(self):
+    def compare_new_password(self, signal):
         if self.password_buffer == self.password_buffer_old:
             file = open(self.password_path, "w")
             file.write(self.password_buffer)
+        print("new1", self.password_buffer_old)
+        print("new2", self.password_buffer)
+        print("alt i orden?", self.password_buffer == self.password_buffer_old)
         self.password_buffer_old = ""
         self.password_buffer = ""
 
