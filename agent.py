@@ -1,3 +1,5 @@
+"""This module contains KPCAgent-class"""
+
 import time
 from typing import Callable
 
@@ -6,6 +8,9 @@ from ledboard import LEDBoard
 
 
 class KPCAgent:
+    """This is the main agent connecting all of the classes together.
+    The logic within the passcode-box is here."""
+
     def __init__(self):
         self.keypad: Keypad = Keypad()
         self.led_board: LEDBoard = LEDBoard(keypad=self.keypad)
@@ -20,18 +25,18 @@ class KPCAgent:
         self.password_buffer = ""
         self.led_board.power_up()
 
-
     def append_next_password_digit(self, signal):
+        """Appends the next digit to the password."""
         self.password_buffer += str(signal)
 
     def reset_agent(self, signal):
+        """Resets the agent"""
         self.override_signal = None
         self.password_buffer = ""
 
-
     def active_agent(self, signal):
+        """Returns if the agent is active"""
         return self.override_signal == "Y"
-
 
     def get_next_signal(self) -> int:
         """Return the override signal, if it is non-blank;
@@ -57,9 +62,9 @@ class KPCAgent:
             self.override_signal = 'N'
             self.led_failure()
 
-
     def validate_passcode_change(self, password: str) -> None:
         """Check that the new password is legal and changes it."""
+
         def valid_passcode() -> bool:
             if len(password) < 4:
                 return False
@@ -101,26 +106,30 @@ class KPCAgent:
         return action(signal=signal)
 
     def led_success(self) -> None:
+        """The LED-lighting pattern when succeeded"""
         self.led_board.twinkle()
 
     def led_failure(self) -> None:
+        """The LED-lighting pattern when failed"""
         self.led_board.flash()
 
     def refresh_agent(self, signal):
+        """Resets the agent."""
         self.password_buffer_old = ""
         self.led_board.power_up()
 
     def cache_first_password(self, signal):
+        """Caches the first password typed."""
         self.password_buffer_old = self.password_buffer
         self.password_buffer = ""
 
     def compare_new_password(self, signal):
+        """Compares to passwords and saves it if they matched"""
         if self.password_buffer == self.password_buffer_old:
             file = open(self.password_path, "w")
             file.write(self.password_buffer)
-        print("new1", self.password_buffer_old)
-        print("new2", self.password_buffer)
-        print("alt i orden?", self.password_buffer == self.password_buffer_old)
+        # print("new1", self.password_buffer_old)
+        # print("new2", self.password_buffer)
+        # print("alt i orden?", self.password_buffer == self.password_buffer_old)
         self.password_buffer_old = ""
         self.password_buffer = ""
-
