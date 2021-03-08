@@ -38,23 +38,6 @@ class LEDBoard:
 
         GPIO.show_leds_states()
 
-    def turn_on_all(self):
-        GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.OUT)
-        GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.OUT)
-        GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.OUT)
-        GPIO.output(PIN_CHARLIEPLEXING_0, GPIO.HIGH)
-        GPIO.output(PIN_CHARLIEPLEXING_1, GPIO.HIGH)
-        GPIO.output(PIN_CHARLIEPLEXING_2, GPIO.HIGH)
-        GPIO.show_leds_states()
-
-
-    def turn_off_all(self):
-        GPIO.setup(PIN_CHARLIEPLEXING_0, GPIO.IN)
-        GPIO.setup(PIN_CHARLIEPLEXING_1, GPIO.IN)
-        GPIO.setup(PIN_CHARLIEPLEXING_2, GPIO.IN)
-
-        GPIO.show_leds_states()
-
     def turn_off(self, k):
         """Turn off the specified LED"""
         pins = self.get_pins(k)
@@ -79,10 +62,10 @@ class LEDBoard:
     def twinkle(self, leds=[k for k in range(6)], t_sleep=0.1):
         """Turn on and off LEDs in sequence"""
         for k in leds:
-            self.turn_on_all()
+            self.turn_on(k)
         sleep(t_sleep)
         for k in leds:
-            self.turn_off_all()
+            self.turn_off(k)
 
     def power_down(self):
         """"Light up all, then turn off one at a time"""
