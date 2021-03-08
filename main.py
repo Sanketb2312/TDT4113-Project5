@@ -30,7 +30,7 @@ def main():
 
     fsm.add_rule(Rule("S-Read-2", "S-Active", '@', agent.refresh_agent))
     fsm.add_rule(Rule("S-Read-3", "S-Active", '@', agent.refresh_agent))
-    fsm.add_rule(Rule("S-Active", "S-Read-2", '*', agent.reset_passcode_accumulator))
+    fsm.add_rule(Rule("S-Active", "S-Read-2", '*', agent.reset_passcode_entry))
     fsm.add_rule(Rule("S-Read-2", "S-Read-3", '*', agent.cache_first_password))
     fsm.add_rule(Rule("S-Read-2", "S-Read-2", Rule.signal_is_digit, agent.append_next_password_digit))
     fsm.add_rule(Rule("S-Read-3", "S-Read-3", Rule.signal_is_digit, agent.append_next_password_digit))

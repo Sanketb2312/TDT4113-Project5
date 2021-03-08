@@ -12,6 +12,7 @@ class KPCAgent:
         self.password_path: str = "password.txt"
         self.override_signal: int or None = None
         self.password_buffer: str = ""
+        self.password_buffer_old: str = ""
 
     def reset_passcode_entry(self, signal) -> None:
         """Clear the passcode-buffer and initiate a “power up”
@@ -103,14 +104,17 @@ class KPCAgent:
     def led_failure(self) -> None:
         self.led_board.flash()
 
-    def reset_passcode_accumulator(self):
-        pass
+    def refresh_agent(self, signal):
+        self.password_buffer_old = ""
+        self.led_board.power_up()
 
-    def refresh_agent(self):
-        pass
-
-    def cache_first_password(self):
-        pass
+    def cache_first_password(self, signal):
+        self.password_buffer_old = self.password_buffer
 
     def compare_new_password(self):
-        pass
+        if self.password_buffer == self.password_buffer_old:
+            file = open(self.password_path, "w")
+            file.write(self.password_buffer)
+        self.password_buffer_old = ""
+        self.password_buffer = ""
+
