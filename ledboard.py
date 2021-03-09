@@ -14,7 +14,8 @@ class LEDBoard:
     def __init__(self, keypad):
         self.__keypad = keypad
 
-    def get_pins(self, k):
+    @staticmethod
+    def get_pins(k):
         """Returns pins: (High, Low, Inactive)"""
         c_pin_h = charlieplexing_pins[(LED_MAP[k])[0]]
         c_pin_l = charlieplexing_pins[(LED_MAP[k])[1]]

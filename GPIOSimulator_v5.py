@@ -151,7 +151,8 @@ class GPIOSimulator:
     def __update_led_states(self):
         """
         internal function, called by GPIO.output
-        set self.__led_states according to the CharliePlexing circuit, charlieplexing pin modes and states
+        set self.__led_states according to the CharliePlexing circuit,
+        charlieplexing pin modes and states
         """
         valid_modes = [[self.OUT, self.OUT, self.IN],
                        [self.IN, self.OUT, self.OUT],
@@ -184,4 +185,3 @@ class GPIOSimulator:
         msg += ']'
         print(msg)
         self.__led_states = [self.OFF] * N_LEDS
-
