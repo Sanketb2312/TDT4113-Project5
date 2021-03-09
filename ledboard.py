@@ -1,6 +1,6 @@
-from time import *
-from GPIOSimulator_v5 import *
-from keypad import Keypad
+"""LED board simulation"""
+from time import time, sleep
+from GPIOSimulator_v5 import GPIOSimulator, charlieplexing_pins
 
 GPIO = GPIOSimulator()
 
@@ -9,6 +9,7 @@ LED_MAP = [(0, 1), (1, 0), (1, 2), (2, 1), (0, 2), (2, 0)]
 
 
 class LEDBoard:
+    """Has multiple functions for lighting up the LED board"""
 
     def __init__(self, keypad):
         self.__keypad = keypad
@@ -21,7 +22,7 @@ class LEDBoard:
         # Find inactive pin
         c_pin_inactive = None
         for i in range(3):
-            if i != LED_MAP[k][0] and i != LED_MAP[k][1]:
+            if i not in (LED_MAP[k][0], LED_MAP[k][1]):
                 c_pin_inactive = charlieplexing_pins[i]
                 break
 
@@ -51,25 +52,26 @@ class LEDBoard:
         leds = []
         for k in range(0, 6):
             leds.append(k)
-            self.flash(leds, 0.2)
+            self.flash(leds, 0.1)
 
-    def flash(self, leds=[k for k in range(6)], t_flash: float =1):
+    def flash(self, leds=[k for k in range(6)], t_flash: float = 0.01):
         """Twinkle fast to light up all"""
         start = time()
+        t_sleep = t_flash / len(leds)
         while time() - start < t_flash:
-            self.twinkle(leds=leds, t_sleep=0.2)
+            self.twinkle(leds=leds, t_sleep=t_sleep)
 
     def twinkle(self, leds=[k for k in range(6)], t_sleep=0.1):
         """Turn on and off LEDs in sequence"""
-        for k in leds:
-            self.turn_on(k)
+        for led in leds:
+            self.turn_on(led)
             sleep(t_sleep)
-            self.turn_off(k)
+            self.turn_off(led)
 
     def power_down(self):
         """"Light up all, then turn off one at a time"""
         leds = [k for k in range(0, 6)]
-        for k in range(0, 6):
+        for i in range(6):
             self.flash(leds, 0.2)
             leds.pop(len(leds) - 1)
 
@@ -81,7 +83,7 @@ class LEDBoard:
         if not isinstance(led, int):
             print("Expecting an integer.")
             return
-        elif led < 0 or led > 5:
+        if led < 0 or led > 5:
             print("Choose a LED between 0 and 5")
             return
 
@@ -100,9 +102,8 @@ class LEDBoard:
                 self.turn_off(led)
                 return
 
-            elif isinstance(inp, int):
+            if isinstance(inp, int):
                 duration += str(inp)
             else:
                 print("Not a valid input.")
                 return
-
