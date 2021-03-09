@@ -4,7 +4,7 @@ from typing import Callable
 
 
 def do_nothing():
-    'returns true'
+    """returns true"""
     return True
 
 
@@ -27,14 +27,14 @@ class Rule:
         def match_state() -> bool:
             if callable(self.source_state):
                 return self.source_state(state)
-            elif isinstance(self.source_state, str):
+            if isinstance(self.source_state, str):
                 return state == self.source_state
             return False
 
         def match_signal() -> bool:
             if callable(self.expected_signal):
                 return self.expected_signal(signal)
-            elif isinstance(self.expected_signal, int) or isinstance(self.expected_signal, str):
+            if isinstance(self.expected_signal, (int, str)):
                 return signal == self.expected_signal
             return False
 
@@ -42,5 +42,6 @@ class Rule:
 
     @staticmethod
     def signal_is_digit(signal):
-        L: list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        return signal in L
+        """Returns if a signal is a digit."""
+        temp_list: list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        return signal in temp_list
