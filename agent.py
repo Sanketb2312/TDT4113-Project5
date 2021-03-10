@@ -19,6 +19,8 @@ class KPCAgent:
         self.password_buffer: str = ""
         self.password_buffer_old: str = ""
         self.current_signal = None
+        self.led_id: int or None = None
+        self.led_duration_sec: int or None = None
 
     def reset_passcode_entry(self) -> None:
         """Clear the passcode-buffer and initiate a “power up”
@@ -52,6 +54,7 @@ class KPCAgent:
         or failure"""
         file = open(self.password_path, "r")
         correct_password: str = file.read()
+        file.close()
         if self.password_buffer == correct_password:
             self.override_signal = 'Y'
             self.led_success()
@@ -78,11 +81,13 @@ class KPCAgent:
         else:
             self.led_failure()
 
-    def light_one_led(self, led_id: int, duration_sec: int):
+    def light_one_led(self):
         """Lights the led specified with id and duration_sec."""
-        self.led_board.turn_on(led_id)
-        time.sleep(duration_sec)
-        self.led_board.turn_off(led_id)
+        self.led_board.turn_on(self.led_id)
+        time.sleep(self.led_duration_sec)
+        self.led_board.turn_off(self.led_id)
+        self.led_id = None
+        self.led_duration_sec = None
 
     def flash_leds(self):
         """Flashed all leds once"""
@@ -130,3 +135,13 @@ class KPCAgent:
         # print("alt i orden?", self.password_buffer == self.password_buffer_old)
         self.password_buffer_old = ""
         self.password_buffer = ""
+
+    def save_led_id(self):
+        self.led_id = self.current_signal
+
+    def append_led_duration(self):
+        if self.led_duration_sec is None:
+            self.led_duration_sec = self.current_signal
+        else:
+            self.led_duration_sec = int(str(self.led_duration_sec) + str(self.current_signal))
+

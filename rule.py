@@ -45,3 +45,7 @@ class Rule:
         """Returns if a signal is a digit."""
         temp_list: list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         return signal in temp_list
+
+    @staticmethod
+    def signal_is_led_id(signal) -> bool:
+        return 0 <= signal <= 5
